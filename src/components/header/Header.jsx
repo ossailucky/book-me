@@ -8,7 +8,7 @@ import 'react-date-range/dist/theme/default.css';
 import { DateRange } from "react-date-range";
 
 
-const Header = () => {
+const Header = ({type}) => {
   const [openDate, setOpenDate] = useState(false);
   const [date, setDate] = useState([
     {
@@ -17,9 +17,21 @@ const Header = () => {
       key: 'selection'
     }
   ]);
+  const [openOptions, setOpenOptions] = useState(false);
+  const [options, setOptions] = useState({
+    adult: 1,
+    children: 0,
+    room: 1
+  });
+
+  const handleOption = (name, operation)=>{
+      setOptions(prev=>{return{
+        ...prev, [name]: operation ==="i" ? options[name] +1 : options[name] -1
+      }})
+  }
   return (
     <div className="header">
-        <div className="headerContainer">
+        <div className={type=== "list"? "headerContainer listMode" : "headerContainer"}>
         <div className="headerList">
             <div className="headerListItem active">
             <FontAwesomeIcon icon={faBed} />
@@ -42,6 +54,8 @@ const Header = () => {
             <span>Airport Taxis</span>
             </div>
         </div>
+        { type !== "list" &&
+          <>
         <h1 className="headerTitle">A liftime of discounts? It's Genius</h1>
             <p className="headerDesc">Get rewarded for your travels-unlock instant savings of 10% or more with a free Book-me account</p>
             <button className="headerBtn">Sign in / Register</button>
@@ -69,13 +83,46 @@ const Header = () => {
               </div>
               <div className="hearderSearchItem">
                   <FontAwesomeIcon icon={faPerson} className="headerIcon" />
-                  <span className="headerSearchText">2 adults 2 children 1 room</span>
+                  <span onClick={()=>setOpenOptions(!openOptions)} className="headerSearchText">{`${options.adult} Adult ${options.children} Children  ${options.room}`}</span>
+                  {openOptions && <div className="options">
+                    <div className="optionItem">
+                      <span className="optionText">Adult</span>
+                      <div className="optionCounter">
+                        <button disabled={options.adult<= 1} className="optionCounterButton" onClick={()=>handleOption("adult", "d")}>-</button>
+                        <span className="optionCounterNumber">{options.adult}</span>
+                        <button className="optionCounterButton" onClick={()=>handleOption("adult", "i")}>+</button>
+                      </div>
+                      
+                    </div>
+                    <div className="optionItem">
+                      <span className="optionText">Children</span>
+                      <div className="optionCounter">
+                        <button disabled={options.children<= 1} className="optionCounterButton" onClick={()=>handleOption("children", "d")}>-</button>
+                        <span className="optionCounterNumber">{options.children}</span>
+                        <button className="optionCounterButton" onClick={()=>handleOption("children", "i")}>+</button>
+                      </div>
+                      
+                    </div>
+                    <div className="optionItem">
+                      <span className="optionText">Room</span>
+                      <div className="optionCounter">
+                        <button disabled={options.room<= 1} className="optionCounterButton" onClick={()=>handleOption("room", "d")}>-</button>
+                        <span className="optionCounterNumber">{options.room}</span>
+                        <button className="optionCounterButton" onClick={()=>handleOption("room", "i")}>+</button>
+                      </div>
+                      
+                    </div>
+                  </div> }
+                  
               </div> 
               <div className="hearderSearchItem">
                   <button className="headerBtn">Search</button>
               </div> 
               
+              
             </div>
+            </>
+              }
         </div>
         
     </div>
