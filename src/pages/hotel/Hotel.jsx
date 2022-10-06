@@ -111,6 +111,7 @@ const Hotel = () => {
           </div>
         </div>
         <MailList />
+        <br />
         <Footer />
       </div>
     </div>
